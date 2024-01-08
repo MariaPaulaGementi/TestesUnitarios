@@ -4,13 +4,10 @@ import static br.ce.wcaquino.utils.DataUtils.adicionarDias;
 
 import java.util.Date;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
-import br.ce.wcaquino.utils.DataUtils;
+
 
 public class LocacaoService {
 	
