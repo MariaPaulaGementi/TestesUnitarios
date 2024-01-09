@@ -13,6 +13,8 @@ import org.junit.rules.ExpectedException;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
+import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
+import br.ce.wcaquino.exceptions.LocadoraException;
 import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoServiceTest {
@@ -49,7 +51,7 @@ public class LocacaoServiceTest {
 		
 	}
 	
-	//tratamento de exceção "elegante"
+	//tratamento de exceção "elegante" -> usar quando tem a garantia do pq a exceção foi lançada
 	@Test(expected=Exception.class) //o teste já espera uma exceção
 	public void testeLocacao_FilmesSemEstoque() throws Exception {
 		LocacaoService servico = new LocacaoService();
@@ -60,7 +62,7 @@ public class LocacaoServiceTest {
 		
 	}
 	
-	//tratamento de exceção "robusta"
+	//tratamento de exceção "robusta" -> tem a necessidade do retorno da mensagem 
 	@Test 
 	public void testeLocacao_FilmesSemEstoque2() {
 		LocacaoService servico = new LocacaoService();
@@ -93,4 +95,34 @@ public class LocacaoServiceTest {
 			servico.alugarFilme(usuario, filme);
 
 		}
+		
+		//tratamento de exceção "robusta"
+		@Test
+		public void testeLocacao_UsuarioVazio() throws FilmeSemEstoqueException {
+			LocacaoService servico = new LocacaoService();
+			Filme filme = new Filme("filme" ,1, 5.0);
+		
+				try {
+					servico.alugarFilme(null, filme);
+					Assert.fail();
+				} catch (LocadoraException e) {			
+					Assert.assertThat(e.getMessage(), CoreMatchers.is("Usuario Vazio"));
+				}
+		}
+		
+		//tratamento de exceção "nova"
+			@Test
+			public void testeLocacao_FilmesVazio() throws FilmeSemEstoqueException, LocadoraException {
+				//cenário
+				LocacaoService servico = new LocacaoService();
+				Usuario usuario = new Usuario("Usuario 1");
+				
+				//exceção
+				exception.expect(LocadoraException.class);
+				exception.expectMessage("Filme vazio");
+				
+				//ação
+				servico.alugarFilme(usuario, null);
+
+			}
 }
